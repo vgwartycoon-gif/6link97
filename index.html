@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ============================================================
+     SEO / SHARING: edit the title and description below
+     (these are read by search engines and link previews, which
+     do not run JavaScript, so they live here and not in CONFIG).
+     ============================================================ -->
+<title>Your Name | Links</title>
+<meta name="description" content="Your one-line bio goes here. All my links in one place.">
+<meta name="theme-color" content="#0f0c20">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Your Name | Links">
+<meta property="og:description" content="Your one-line bio goes here. All my links in one place.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Your Name | Links">
+<meta name="twitter:description" content="Your one-line bio goes here. All my links in one place.">
+
+<!-- Inline SVG favicon (purple dot on dark) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231a103c'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23a55eea'/%3E%3C/svg%3E">
+
+<style>
+  /* ---------- Design tokens (taken from the reference page) ---------- */
+  :root {
+    --bg-start: #0f0c20;
+    --bg-end: #1a103c;
+    --text: #e2e8f0;
+    --text-soft: #cbd5e0;
+    --text-muted: #a0aec0;
+    --accent: #a55eea;
+    --accent-2: #8c7ae6;
+    --accent-focus: #d2b2f7;
+    --glass: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --radius-card: 16px;
+    --radius-avatar: 50%;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* Fallback so no white ever shows below the gradient */
+  html { background: var(--bg-end); }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ---------- Header: avatar, name, handle, bio ---------- */
+  header {
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    text-align: center;
+    padding: 56px 20px 40px;
+  }
+
+  .avatar {
+    width: 130px;
+    height: 130px;
+    border-radius: var(--radius-avatar);
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px;
+    background: var(--bg-end);
+  }
+
+  h1 {
+    font-size: clamp(1.9rem, 7vw, 2.5rem);
+    line-height: 1.2;
+    margin-bottom: 4px;
+    font-weight: 700;
+    /* Fallback colour first, then gradient text where supported */
+    color: var(--accent);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    overflow-wrap: anywhere;
+  }
+
+  .handle {
+    font-size: 1rem;
+    color: var(--text-soft);
+    margin-bottom: 8px;
+  }
+
+  .bio {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 46ch;
+    margin: 0 auto;
+  }
+
+  /* ---------- Link buttons ---------- */
+  main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  .links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .link-btn {
+    display: block;
+    width: 100%;
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    background: var(--glass);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-card);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow-wrap: anywhere;
+  }
+
+  /* State changes only, no animation or movement */
+  .link-btn:hover {
+    border-color: rgba(165, 94, 234, 0.6);
+    background: rgba(165, 94, 234, 0.12);
+  }
+
+  /* Clearly visible keyboard focus */
+  .link-btn:focus-visible {
+    outline: 3px solid var(--accent-focus);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 360px) {
+    header { padding: 44px 16px 32px; }
+    main { padding: 32px 16px 48px; }
+    .avatar { width: 110px; height: 110px; }
+    .link-btn { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <!-- Profile photo: set CONFIG.photo below to swap in a real image -->
+    <img class="avatar" id="avatar" alt="" width="130" height="130">
+    <h1 id="name"></h1>
+    <p class="handle" id="handle"></p>
+    <p class="bio" id="bio"></p>
+  </header>
+
+  <main>
+    <nav aria-label="My links">
+      <ul class="links" id="links"></ul>
+    </nav>
+  </main>
+
+  <script>
+    /* =====================================================================
+       CONFIG: EDIT EVERYTHING HERE. You should not need to touch the HTML.
+       (Also update the <title> and description meta tags in the <head>.)
+       ===================================================================== */
+    const CONFIG = {
+      name:   "Your Name",
+      handle: "@yourhandle",
+      bio:    "One line about you or what you make.",
+
+      // PROFILE PHOTO: replace "" with a path or URL, e.g. "me.jpg" or
+      // "https://example.com/me.jpg". Leave "" to show the placeholder below.
+      photo: "",
+
+      // Links render top to bottom in this order. Add, remove, or reorder freely.
+      links: [
+        { label: "My Website",     url: "https://example.com" },
+        { label: "GitHub",         url: "https://github.com/yourname" },
+        { label: "YouTube",        url: "https://youtube.com/@yourname" },
+        { label: "Instagram",      url: "https://instagram.com/yourname" },
+        { label: "Email Me",       url: "mailto:you@example.com" },
+        { label: "Latest Project", url: "https://example.com/project" }
+      ]
+    };
+
+    /* ---------------------------------------------------------------------
+       Placeholder avatar (inline SVG data URI): generic person silhouette.
+       Only used when CONFIG.photo is empty.
+       --------------------------------------------------------------------- */
+    const PLACEHOLDER_AVATAR = "data:image/svg+xml," + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 130">' +
+      '<rect width="130" height="130" fill="#1a103c"/>' +
+      '<circle cx="65" cy="50" r="24" fill="#8c7ae6"/>' +
+      '<path d="M18 130c0-26 21-46 47-46s47 20 47 46z" fill="#a55eea"/>' +
+      '</svg>'
+    );
+
+    /* ---------------------------------------------------------------------
+       Render (uses textContent, so placeholder text is never parsed as HTML)
+       --------------------------------------------------------------------- */
+    (function render() {
+      const avatar = document.getElementById("avatar");
+      avatar.src = CONFIG.photo || PLACEHOLDER_AVATAR;
+      avatar.alt = "Profile photo of " + CONFIG.name;
+
+      document.getElementById("name").textContent = CONFIG.name;
+      document.getElementById("handle").textContent = CONFIG.handle;
+      document.getElementById("bio").textContent = CONFIG.bio;
+
+      const list = document.getElementById("links");
+      CONFIG.links.forEach(function (item) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.className = "link-btn";
+        a.href = item.url;
+        a.textContent = item.label;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+    })();
+  </script>
+</body>
+</html>
